@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Todo</string>
+
+    <string name="hello_world">Hello Chaturya!</string>
+    <string name="action_settings">Settings</string>
+    <string name="add_lbl">ADD</string>
+    <string name="enter_itm_lbl">Enter Item Name</string>
+    <string name="delpos_lbl">Enter Index to delete</string>
+    <string name="lbl_delbtn">Delete</string>
+    <string name="title_activity_edit_item">EditItemActivity</string>
+
+</resources>
