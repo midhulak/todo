@@ -1,8 +1,8 @@
 package com.codepath.todo;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,41 +19,70 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 
-public class MainActivity extends ActionBarActivity  {
+public class MainActivity extends ActionBarActivity   {
     ArrayList<String> items;
     ArrayAdapter<String> itemsAdapter;
     ListView lvItems;
-
+   private  final int  REQUEST_CODE = 20;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         lvItems = (ListView)findViewById(R.id.lvItems);
-       // items = new ArrayList<String>();
-       readItems();
+        readItems();
         itemsAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,items);
         lvItems.setAdapter(itemsAdapter);
-       setupListViewListener();
+        setupListViewListener();
+        editListener();
 
     }
 
-    public void onClick(View v){
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+          if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
+            String editItem = data.getExtras().getString("editItem");
+            String position = data.getExtras().getString("position");
+            items.set(Integer.parseInt(position),editItem);
+            itemsAdapter.notifyDataSetChanged();
+            writeItems();
+
+        }
     }
+
 
     private  void setupListViewListener(){
         lvItems.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.i("","coming here="+position);
+                String delItem = items.get(position);
                   items.remove(position);
                 itemsAdapter.notifyDataSetChanged();
+                Toast.makeText(MainActivity.this, delItem+ " Deleted Successfully", Toast.LENGTH_SHORT).show();
                 writeItems();
                 return true;
             }
         });
     }
 
+
+    private  void editListener(){
+        lvItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                 Intent i = new Intent(MainActivity.this, EditItemActivity.class);
+                // put "extras" into the bundle for access in the second activity
+                String itemName = items.get(position);
+                i.putExtra("position", position+"");
+                i.putExtra("itemName", itemName);
+                i.putExtra("code", 400);
+                // brings up the second activity
+                startActivityForResult(i, REQUEST_CODE);
+
+
+            }
+        });
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -68,15 +97,12 @@ public class MainActivity extends ActionBarActivity  {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+       if (id == R.id.action_settings) {
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
-
 
     public void onAddItem(View view) {
 
@@ -89,8 +115,7 @@ public class MainActivity extends ActionBarActivity  {
 
     private void readItems(){
         File filesDir = getFilesDir();
-        System.out.println("filesdir is="+filesDir);
-        File todoFile = new File(filesDir, "chatu.txt");
+         File todoFile = new File(filesDir, "chatu.txt");
         try{
             items = new ArrayList<String>(FileUtils.readLines(todoFile));
         }
@@ -112,19 +137,7 @@ public class MainActivity extends ActionBarActivity  {
 
     }
 
-    public void OnDelete(View view) {
-        EditText etdelItem = (EditText)findViewById(R.id.delitem_id);
-        int delpos = Integer.parseInt(etdelItem.getText().toString());
-        String rmvItem = items.get(delpos);
-        items.remove(delpos);
-        itemsAdapter.notifyDataSetChanged();
-        int sizeitem  = items.size();
-        Toast.makeText(this, rmvItem+" Deleted Successfully", Toast.LENGTH_SHORT).show();
-     //   String sizeitem = items.size()+"";
-      //  Toast.makeText(this,"Deleted Successfully",Toast.LENGTH_SHORT).show();
-     // Log.d("items size",items.size()+"");
-     writeItems();
-    }
+
 
 
 }

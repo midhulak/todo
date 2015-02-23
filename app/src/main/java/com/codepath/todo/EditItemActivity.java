@@ -1,17 +1,42 @@
 package com.codepath.todo;
 
-import android.support.v7.app.ActionBarActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 
 
-public class EditItemActivity extends ActionBarActivity {
+public class EditItemActivity extends ActionBarActivity   {
+    private EditText editItem;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_item);
+        String itemName = getIntent().getStringExtra("itemName");
+        editItem = (EditText)findViewById(R.id.editItem_Id);
+        editItem.append(itemName);
+        Button savebtn = (Button)findViewById(R.id.savebtn_id);
+        savebtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+        public void onClick(View v){
+                String  position = getIntent().getStringExtra("position");
+                 Intent data = new Intent();
+                // Pass relevant data back as a result
+                data.putExtra("position", position);
+                data.putExtra("editItem",  editItem.getText().toString());
+                data.putExtra("code", 200); // ints work too
+                // Activity finished ok, return the data
+                setResult(RESULT_OK, data); // set result code and bundle data for response
+                finish(); // closes the activity, pass data to parent
+            }
+
+        });
     }
 
 
@@ -36,4 +61,6 @@ public class EditItemActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
 }
