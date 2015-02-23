@@ -25,6 +25,7 @@ public class MainActivity extends ActionBarActivity   {
     ListView lvItems;
    private  final int  REQUEST_CODE = 20;
     @Override
+    //OnnCreate Activity is going to call when it loads 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
