@@ -3,6 +3,7 @@ package com.codepath.todo;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,7 +26,7 @@ public class MainActivity extends ActionBarActivity   {
     ListView lvItems;
    private  final int  REQUEST_CODE = 20;
     @Override
-    //OnnCreate Activity is going to call when it loads 
+    //OnnCreate Activity is going to call when it loads
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -109,9 +110,20 @@ public class MainActivity extends ActionBarActivity   {
 
         EditText etNewItem = (EditText)findViewById(R.id.item_id);
         String itemText = etNewItem.getText().toString();
-        itemsAdapter.add(itemText);
-        etNewItem.setText("");
-         writeItems();
+        Log.i("","item text="+itemText);
+        if(items.size() == 6){
+            Toast.makeText(this,"MAX Limit Exceeded",Toast.LENGTH_SHORT).show();
+        }
+        if(itemText.equals("") ){
+            Toast.makeText(this,"Please enter Item Name to Add",Toast.LENGTH_SHORT).show();
+        }
+           else {
+            itemsAdapter.add(itemText);
+            etNewItem.setText("");
+            writeItems();
+        }
+
+
     }
 
     private void readItems(){

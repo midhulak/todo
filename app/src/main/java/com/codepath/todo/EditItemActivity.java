@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 
 public class EditItemActivity extends ActionBarActivity   {
@@ -26,14 +27,20 @@ public class EditItemActivity extends ActionBarActivity   {
             @Override
         public void onClick(View v){
                 String  position = getIntent().getStringExtra("position");
-                 Intent data = new Intent();
-                // Pass relevant data back as a result
-                data.putExtra("position", position);
-                data.putExtra("editItem",  editItem.getText().toString());
-                data.putExtra("code", 200); // ints work too
-                // Activity finished ok, return the data
-                setResult(RESULT_OK, data); // set result code and bundle data for response
-                finish(); // closes the activity, pass data to parent
+                String item = editItem.getText().toString();
+                if(item.equals("") ){
+                    Toast.makeText(EditItemActivity.this, "Item is empty", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Intent data = new Intent();
+                    // Pass relevant data back as a result
+                    data.putExtra("position", position);
+                    data.putExtra("editItem", item);
+                    data.putExtra("code", 200); // ints work too
+                    // Activity finished ok, return the data
+                    setResult(RESULT_OK, data); // set result code and bundle data for response
+                    finish(); // closes the activity, pass data to parent
+                }
             }
 
         });
